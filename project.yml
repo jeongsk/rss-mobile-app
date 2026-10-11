@@ -1,0 +1,128 @@
+name: RSSReader
+options:
+  bundleIdPrefix: com.anpigon
+  deploymentTarget:
+    iOS: "18.0"
+  developmentLanguage: ko
+packages:
+  SwiftSoup:
+    url: https://github.com/scinfu/SwiftSoup
+    from: 2.7.0
+settings:
+  base:
+    # 내 기기에 설치할 때는 이 두 값만 바꾼다 (앱, 위젯, App Group 이 모두 여기서 파생된다)
+    APP_BUNDLE_ID: com.anpigon.RSSReader
+    # 팀 ID 는 저장소에 두지 않는다: DEVELOPMENT_TEAM=<팀 ID> xcodegen generate
+    DEVELOPMENT_TEAM: ${DEVELOPMENT_TEAM}
+    APP_GROUP_ID: group.$(APP_BUNDLE_ID)
+    SWIFT_VERSION: "6.0"
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+targets:
+  RSSReader:
+    type: application
+    platform: iOS
+    sources:
+      - RSSReader
+      - Shared
+    dependencies:
+      - package: SwiftSoup
+      - target: RSSReaderWidget
+    entitlements:
+      path: RSSReader/RSSReader.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - $(APP_GROUP_ID)
+    info:
+      path: RSSReader/Info.plist
+      properties:
+        CFBundleDisplayName: 내 RSS
+        AppGroupID: $(APP_GROUP_ID)
+        CFBundleDevelopmentRegion: ko
+        UILaunchScreen: {}
+        UIApplicationSupportsIndirectInputEvents: true
+        ITSAppUsesNonExemptEncryption: false
+        UIBackgroundModes:
+          - fetch
+          - processing
+          - audio
+        BGTaskSchedulerPermittedIdentifiers:
+          - com.anpigon.RSSReader.refresh
+          - com.anpigon.RSSReader.cache
+        UTImportedTypeDeclarations:
+          - UTTypeIdentifier: org.opml.opml
+            UTTypeDescription: OPML
+            UTTypeConformsTo:
+              - public.xml
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - opml
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_ID)
+        TARGETED_DEVICE_FAMILY: "1,2"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+  RSSReaderWidget:
+    type: app-extension
+    platform: iOS
+    sources:
+      - RSSReaderWidget
+      - Shared
+    entitlements:
+      path: RSSReaderWidget/RSSReaderWidget.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - $(APP_GROUP_ID)
+    info:
+      path: RSSReaderWidget/Info.plist
+      properties:
+        CFBundleDisplayName: 내 RSS
+        AppGroupID: $(APP_GROUP_ID)
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_ID).Widget
+        TARGETED_DEVICE_FAMILY: "1,2"
+        SKIP_INSTALL: YES
+  RSSReaderTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - RSSReaderTests
+    dependencies:
+      - target: RSSReader
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+  RSSReaderUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - RSSReaderUITests
+    dependencies:
+      - target: RSSReader
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_TARGET_NAME: RSSReader
+schemes:
+  RSSReader:
+    build:
+      targets:
+        RSSReader: all
+        RSSReaderTests: [test]
+        RSSReaderUITests: [test]
+    test:
+      targets:
+        - RSSReaderTests
+        - RSSReaderUITests

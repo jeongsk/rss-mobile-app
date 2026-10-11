@@ -1,0 +1,11 @@
+build/
+DerivedData/
+.DS_Store
+xcuserdata/
+screenshots/
+
+# graft's local graph cache — regenerable, not committed (run `graft build`).
+/graft/
+
+# xcodegen 이 project.yml 과 환경변수(DEVELOPMENT_TEAM)로 만든다
+RSSReader.xcodeproj/project.pbxproj
