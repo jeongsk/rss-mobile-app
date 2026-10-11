@@ -4,6 +4,14 @@
 
 저장소: https://github.com/jeongsk/rss-mobile-app
 
+## 데모
+
+사이트 주소(`https://news.ycombinator.com/`)만 넣어 피드를 찾고, 글을 열면 원문에서 본문을 추출해 리더 화면으로 보여 준다.
+
+<a href="docs/media/demo.mp4"><img src="docs/media/demo.gif" width="300" alt="Hacker News 피드를 추가하고 글을 읽는 데모"></a>
+
+[MP4로 보기](docs/media/demo.mp4)
+
 ## 기능
 
 | 기능 | 내용 |
@@ -76,6 +84,7 @@
 ./test.sh -only-testing:RSSReaderTests
 ./run.sh "iPhone 17" -demo  # 샘플 구독을 넣고 실행 (DEBUG)
 TEST_RUNNER_LIVE_TESTS=1 ./test.sh -only-testing:RSSReaderTests/LiveExtractionTests  # 실제 사이트 본문 추출 점검
+TEST_RUNNER_DEMO_VIDEO=1 ./test.sh -only-testing:RSSReaderUITests/DemoUITests  # 데모 흐름 (녹화: xcrun simctl io booted recordVideo demo.mp4)
 ```
 
 DEBUG 실행 인자 (캡처·점검용): `-demo`, `-openFirst`, `-layout list|magazine|grid|titles`, `-sidebar`, `-highlights`, `-sheet addFeed|importOPML|settings`, `-theme`, `-font`, `-web`, `-style`, `-speak`, `-fakeTranslate -display both|translated`, `-demoHighlight`, `-syncFolder <경로>`.
